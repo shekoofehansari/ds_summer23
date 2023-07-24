@@ -1,0 +1,150 @@
+---
+title: "Diabetes and related factors"
+author: "ansari.shekoofeh@stud.hs-fresenius.de"
+date: "07.06.2023"
+output:
+  beamer_presentation: default
+  slidy_presentation: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Source of dataset
+
+The Diabetes dataset originates from the National Institute of Diabetes and Digestive and Kidney Diseases (NIDDK) in the United States. It was specifically created for research purposes, aiming to facilitate the development and evaluation of predictive models for diagnosing diabetes.
+
+The dataset consists of records from 768 individuals, representing a diverse group of female patients aged 21 years and above, primarily of Pima Indian heritage. Each record includes a set of feature values and an associated diabetes outcome
+
+
+## Features
+The Diabetes dataset comprises a range of numerical and categorical features relevant to predicting diabetes. These features include:
+
+- **Pregnancies**: Number of times pregnant
+- **Glucose**: Plasma glucose concentration (mg/dL)
+- **BloodPressure**: Diastolic blood pressure (mm Hg)
+- **SkinThickness**: Triceps skinfold thickness (mm)
+- **Insulin**: 2-Hour serum insulin (mu U/ml)
+- **BMI**: Body mass index (weight in kg/(height in m)^2)
+- **DiabetesPedigreeFunction**: Diabetes pedigree function (a measure of genetic influence)
+- **Age**: Age in years
+
+
+**Outcome**: Diabetes outcome (0 for non-diabetic, 1 for diabetic)
+
+## Display 
+``` {r}
+diabetes_data <- read.csv("C:/Users/ansar/Desktop/diabetes_data.csv.csv")
+str(diabetes_data)
+```
+## Summary statistics
+```{r }
+
+summary(diabetes_data)
+```
+
+
+## Diabetes
+
+There are three main types of diabetes mellitus:
+
+**Type 1 diabetes:** failure of the pancreas to $\underline{produce \ enough \ insulin}$ due to loss of beta cells
+
+**Type 2 diabetes:** begins with insulin resistance, a condition in which cells $\underline{fail \ to \ respond \ to \ insulin}$ properly.
+
+**Gestational diabetes:** occurs when pregnant women - without a previous history of diabetes develop high blood sugar levels
+
+## Pregnancy 
+
+```{r  echo=FALSE, warning=FALSE , message=FALSE}
+ID <- 1:20
+
+library(dplyr)
+df <- read.csv("C:/Users/ansar/Desktop/diabetes_data.csv.csv")
+
+
+df_grp <-  df %>% group_by(Pregnancies)  %>%
+  summarise(Frequencies = length(Pregnancies),
+            .groups = 'drop')
+
+library(ggplot2)
+ggplot(df_grp, aes(x=Pregnancies, y=Frequencies)) + 
+  geom_bar(stat = "identity")  +
+  scale_x_continuous("Pregnancies", labels = as.character(ID), breaks = ID)+
+  geom_text(aes(label = Frequencies), vjust = -0.2)
+  
+```
+
+
+## BMI
+
+$$
+BMI=\frac{Weight_{(kg)}}{Height^2_{(m)}}
+$$
+<p align="center">
+<img src="C:/Users/ansar/Desktop\bmi-adult-fb-600x315.jpg" alt="BMI" width="500" height="300">
+</p>
+
+## Ages
+
+``` {r}
+library(ggplot2)
+df_gra <-  df %>% group_by(Age)  %>%
+  summarise(Frequencies = length(Age),
+            .groups = 'drop')
+
+ggplot(df_gra, aes(x=Age, y=Frequencies)) + 
+    geom_point()+
+ geom_text(aes(label = Frequencies), vjust = -0.2)
+```
+\newpage
+
+## Regression
+
+``` {R echo=FALSE, warning=FALSE , message=FALSE} 
+library(ggplot2)
+library(dplyr)
+library(gridExtra)
+library(corrplot)
+numeric.var <- sapply(df, is.numeric)
+corr.matrix <- cor(df[,numeric.var])
+corrplot(corr.matrix, main="\n\nCorrelation Plot for Numerical Variables", order = "hclust", tl.col = "Black", tl.srt=45, tl.cex=0.8, cl.cex=0.8, col = "Pink")
+```
+
+## Road map
+
+1.We will collect the data.
+
+2.Then , we'll import data set to read our data from a CSV file and manipulate it for further use.
+
+3.We'll also use Knit to convert out data into a format suitable to feed our classification model.
+
+
+4.We will use many packages for visualizations. 
+
+5.Then,we import logistic regression algorithm and cross validation.
+
+6.Lastly, we have some conclusion about relation between diabetes and some factors.
+
+## Some references
+
+1.https://towardsdatascience.com/end-to-end-data-science-example-predicting-diabetes-with-logistic-regression-db9bc88b4d16
+
+2.https://www.cdc.gov/diabetes/basics/diabetes.html#:~:text=Diabetes%20is%20a%20chronic%20(long,your%20pancreas%20 to%20release%20insulin.
+
+3.National Diabetes Data Group (US), National Institute of Diabetes and Kidney Diseases (US), 1995. Diabetes in America (No. 95). National Institutes of Health, National Institute of Diabetes and Digestive and Kidney Diseases.
+
+4.Forouhi, N.G. and Wareham, N.J., 2010. Epidemiology of diabetes. Medicine, 38(11), pp.602-606.
+
+5.https://r-graph-gallery.com/scatterplot.html
+
+6.Disease Control, Centers for, and Prevention. 2022. “What Is Diabetes?”
+https://www.cdc.gov/diabetes/basics/diabetes.html#print.
+
+
+
+
+\newpage
+
+ <center> **THANKS FOR YOUR ATTENTION**
